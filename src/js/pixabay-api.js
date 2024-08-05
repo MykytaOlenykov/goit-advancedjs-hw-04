@@ -12,12 +12,10 @@ const notify = {
   },
 };
 
-const { VITE_API_KEY } = import.meta.env;
-
 class PixabayApi {
   #API_URL = 'https://pixabay.com/api/';
   #BASE_SEARCH_PARAMS = {
-    key: VITE_API_KEY,
+    key: '33901204-9e2cee760dcc4c2bf1fca35a0',
     q: '',
     image_type: 'photo',
     orientation: 'horizontal',
