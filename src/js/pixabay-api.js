@@ -58,9 +58,7 @@ class PixabayApi {
         renderGallery(data.hits ?? []);
       })
       .catch(err => {
-        if (err?.name !== 'AbortError') {
-          notify.error(err?.message ?? 'Something went wrong');
-        }
+        notify.error(err?.message ?? 'Something went wrong');
       })
       .finally(() => {
         finallyCallback?.();
