@@ -67,7 +67,7 @@ async function handleSearchPhotos(e) {
       registerIntersectionObserver();
     }
   } catch (error) {
-    notify.error(err?.message ?? 'Something went wrong');
+    notify.error(error?.message ?? 'Something went wrong');
   } finally {
     buttonElement.enable();
     progressElement.hide();
