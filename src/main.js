@@ -62,7 +62,8 @@ async function handleSearchPhotos(e) {
     }
 
     gallery.addPhotos(data.hits ?? []);
-    if (!data.hits?.length) {
+
+    if (data.hits?.length) {
       registerIntersectionObserver();
     }
   } catch (error) {
