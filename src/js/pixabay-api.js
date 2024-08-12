@@ -1,75 +1,36 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+import axios from 'axios';
 
-import { renderGallery, toggleProgressBar } from './render-functions';
-
-const notify = {
-  error(message) {
-    iziToast.error({
-      position: 'topRight',
-      message,
-    });
-  },
-};
-
-class PixabayApi {
-  #API_URL = 'https://pixabay.com/api/';
-  #BASE_SEARCH_PARAMS = {
+export const pixabayApi = axios.create({
+  baseURL: 'https://pixabay.com/api/',
+  params: {
     key: '33901204-9e2cee760dcc4c2bf1fca35a0',
-    q: '',
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
-  };
+    per_page: 20,
+  },
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-  fetchPhotos({
-    searchValue = '',
-    startCallback = null,
-    finallyCallback = null,
-  }) {
-    this.#validateSearchValue(searchValue);
+export async function getPhotos({ searchValue = '', page = 1, signal }) {
+  validateSearchValue(searchValue);
 
-    const serachParams = new URLSearchParams({
-      ...this.#BASE_SEARCH_PARAMS,
+  const { data } = await pixabayApi.get('', {
+    params: {
       q: searchValue,
-    });
+      page,
+    },
+    signal,
+  });
 
-    startCallback?.();
-    toggleProgressBar(true);
-
-    fetch(`${this.#API_URL}?${serachParams}`, {
-      method: 'GET',
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (!data.hits?.length) {
-          notify.error(
-            'Sorry, there are no images matching your search query. Please try again!'
-          );
-        }
-
-        renderGallery(data.hits ?? []);
-      })
-      .catch(err => {
-        notify.error(err?.message ?? 'Something went wrong');
-      })
-      .finally(() => {
-        finallyCallback?.();
-        toggleProgressBar(false);
-      });
-  }
-
-  #validateSearchValue(searchValue) {
-    if (searchValue.length > 100) {
-      const message = 'Search value may not exceed 100 characters.';
-      throw new Error(message);
-    }
-  }
+  return data;
 }
 
-export const pixabayApi = new PixabayApi();
+function validateSearchValue(searchValue) {
+  if (searchValue.length > 100) {
+    const message = 'Search value may not exceed 100 characters.';
+    throw new Error(message);
+  }
+}

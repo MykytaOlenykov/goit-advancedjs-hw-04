@@ -1,29 +1,33 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const galleryRef = document.querySelector('.gallery');
+export const galleryRef = document.getElementById('gallery');
 
-const gallery = new SimpleLightbox('.gallery a', {
+const gallerySimpleLightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
   overlayOpacity: 0.8,
 });
 
-export function renderGallery(data) {
-  galleryRef.innerHTML = data.map(getGalleryItemMarkup).join('');
-  gallery.refresh();
-}
-
-function getGalleryItemMarkup({
-  largeImageURL,
-  tags,
-  webformatURL,
-  likes,
-  views,
-  comments,
-  downloads,
-}) {
-  return `
+export const gallery = {
+  addPhotos(data) {
+    const markup = data.map(this.generatePhotoMarkup).join('');
+    galleryRef.insertAdjacentHTML('beforeend', markup);
+    gallerySimpleLightbox.refresh();
+  },
+  clear() {
+    galleryRef.innerHTML = '';
+  },
+  generatePhotoMarkup({
+    largeImageURL,
+    tags,
+    webformatURL,
+    likes,
+    views,
+    comments,
+    downloads,
+  }) {
+    return `
         <li class="gallery-item">
             <a class="gallery-link" href="${largeImageURL}">
                 <img
@@ -53,14 +57,15 @@ function getGalleryItemMarkup({
             </a>
         </li>
     `;
-}
+  },
+};
 
-const progressBarRef = document.querySelector('.progress-bar');
-
-export function toggleProgressBar(show) {
-  if (show) {
-    progressBarRef.classList.add('progress-bar--show');
-  } else {
-    progressBarRef.classList.remove('progress-bar--show');
-  }
-}
+export const progressElement = {
+  ref: document.querySelector('.progress-bar'),
+  hide() {
+    this.ref.classList.remove('progress-bar--show');
+  },
+  show() {
+    this.ref.classList.add('progress-bar--show');
+  },
+};
