@@ -62,7 +62,9 @@ async function handleSearchPhotos(e) {
     }
 
     gallery.addPhotos(data.hits ?? []);
-    registerIntersectionObserver();
+    if (!data.hits?.length) {
+      registerIntersectionObserver();
+    }
   } catch (error) {
     notify.error(err?.message ?? 'Something went wrong');
   } finally {
@@ -93,7 +95,7 @@ function registerIntersectionObserver() {
             searchValue,
             signal: abortController.signal,
           });
-          gallery.addPhotos(data.hits);
+          gallery.addPhotos(data.hits ?? []);
           checkCollectionEnd(data.totalHits);
         } catch (error) {
           if (isAxiosError(error) && error.code === 'ERR_CANCELED') {
