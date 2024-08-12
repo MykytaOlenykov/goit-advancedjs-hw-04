@@ -84,10 +84,10 @@ function registerIntersectionObserver() {
   const onEntry = entries => {
     entries.forEach(async entry => {
       if (entry.isIntersecting) {
-        progressElement.show();
-        page += 1;
-
         try {
+          progressElement.show();
+          page += 1;
+
           const data = await getPhotos({
             page,
             searchValue,
@@ -100,9 +100,9 @@ function registerIntersectionObserver() {
             return;
           }
           notify.error(error.message);
+        } finally {
+          progressElement.hide();
         }
-
-        progressElement.hide();
       }
     });
   };
