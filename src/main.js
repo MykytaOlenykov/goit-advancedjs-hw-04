@@ -81,7 +81,7 @@ let page = 1;
 function registerIntersectionObserver() {
   abortController = new AbortController();
   const options = {
-    rootMargin: '200px',
+    rootMargin: '800px',
   };
 
   const onEntry = entries => {
